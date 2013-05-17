@@ -18,7 +18,7 @@ public class NearestNeighborTour extends IncrementallyConstructedTour {
 
   @Override
   public double getTotalDistance() {
-    throw new RuntimeException("not implemented");
+    // TODO
   }
 
   @Override
