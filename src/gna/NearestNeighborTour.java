@@ -45,6 +45,7 @@ public class NearestNeighborTour extends IncrementallyConstructedTour {
 				total += begin.distanceTo(next);
 				begin = next;			
 			}
+			total += tour.get(tour.size()-1).distanceTo(tour.get(0));
 			return total;
 		}
 	}

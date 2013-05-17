@@ -18,11 +18,24 @@ public class SmallestIncreaseTour extends IncrementallyConstructedTour {
 
   @Override
   public double getTotalDistance() {
-    throw new RuntimeException("not implemented");
+	  if (getWorld().getNbPoints() < 2)
+			return 0;
+		else {
+			double total = 0;
+			tour = super.getTour();
+			Point begin = tour.get(0);
+			for (int i = 1; i < tour.size(); i ++){
+				Point next = tour.get(i);
+				total += begin.distanceTo(next);
+				begin = next;			
+			}
+			total += tour.get(tour.size()-1).distanceTo(tour.get(0));
+			return total;
+		}
   }
 
   @Override
   public List<Point> getVisitSequence() {
-    throw new RuntimeException("not implemented");
+	  return super.getTour();
   }
 }
