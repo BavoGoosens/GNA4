@@ -20,6 +20,7 @@ public class SmallestIncreaseTour extends IncrementallyConstructedTour {
 			//enkel start zit in tour
 			if (super.getTour().size() == 1 ){
 				super.getTour().add(point);
+				return;
 			}
 			// tour >= 2 
 			int insertIndex = 1; 
@@ -28,8 +29,19 @@ public class SmallestIncreaseTour extends IncrementallyConstructedTour {
 			double minimum = possibleTotalDistance(beginIndex,nextIndex,beginDis,point);
 			beginIndex = nextIndex;
 			for (int i = 2; i < super.getTour().size(); i ++){
-				if (minimum >)
-				
+				if (minimum > possibleTotalDistance(beginIndex,i,beginDis,point)){
+					minimum = possibleTotalDistance(beginIndex,i,beginDis,point);
+					insertIndex = i;
+				}
+				beginIndex = i;				
+			}
+			if(possibleTotalDistance(tour.size()-1, 0, beginDis, point) < minimum){
+				insertIndex = -1;
+			}
+			if(insertIndex == -1)
+				super.getTour().add(point);
+			else{
+				super.getTour().add(insertIndex, point);
 			}
 		}
 	}
