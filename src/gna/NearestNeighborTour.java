@@ -13,7 +13,7 @@ public class NearestNeighborTour extends IncrementallyConstructedTour {
   
   @Override
   public void insert(Point point) {
-    throw new RuntimeException("not implemented");
+	  // shizzles
   }
 
   @Override
