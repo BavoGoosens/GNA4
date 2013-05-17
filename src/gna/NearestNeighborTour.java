@@ -39,14 +39,19 @@ public class NearestNeighborTour extends IncrementallyConstructedTour {
 		else {
 			double total = 0;
 			tour = super.getTour();
-			Point begin = tour.get(0);
-			for (int i = 1; i < tour.size(); i ++){
-				Point next = tour.get(i);
-				total += begin.distanceTo(next);
-				begin = next;			
+			if(tour.size() > 1){
+				Point begin = tour.get(0);
+				for (int i = 1; i < tour.size(); i ++){
+					Point next = tour.get(i);
+					total += begin.distanceTo(next);
+					begin = next;			
+				}
+				total += tour.get(tour.size()-1).distanceTo(tour.get(0));
+				return total;
+			}else{
+				// het enige pad dat in de tour zit is de start
+				return 0;
 			}
-			total += tour.get(tour.size()-1).distanceTo(tour.get(0));
-			return total;
 		}
 	}
 
