@@ -66,16 +66,25 @@ public class MinimalSpanningTreeTour extends Tour {
 	public String toString() {
 		return this.p1.toString() + "---" + this.getWeight() + "---" + p2.toString();
 	}
+
+	public Point either() {
+		return this.p1;
+	}
+
+	public Point other() {
+		return this.p2;
+	}
     
   }
   
   public MinimalSpanningTreeTour(World world) {
     super(world);
     // compute route here
-    HashMap<double[], Point> vertecesInTree = new HashMap<>();
+    HashMap<Point, Point> vertecesInTree = new HashMap<>();
     TreeSet<MSTEdge> possibleEdges = new TreeSet<>(new weightComperator());
     
     ArrayList<Point> punten = (ArrayList<Point>) world.getPoints();
+    this.root = punten.get(0);
     // alle mogelijke edges aanmaken
     MSTEdge dummy = new MSTEdge(new Point(0, 0), new Point(0, 0));
     for( Point punt: punten){
@@ -89,9 +98,25 @@ public class MinimalSpanningTreeTour extends Tour {
     	}
     }
     
+    // kruskal 
+    
+    while(!possibleEdges.isEmpty() && vertecesInTree.size()<world.getNbPoints()-1){
+    	MSTEdge candidate = possibleEdges.pollFirst();
+    	Point p1 = candidate.either();
+    	Point p2 = candidate.other();
+    	if (!(vertecesInTree.containsKey(p1) && vertecesInTree.containsKey(p2))){
+    		vertecesInTree.put(p1, p1);
+    		vertecesInTree.put(p2, p2);
+    		MST.add(candidate);
+    	}
+    }
     
   }
 
+  private Point root;
+  
+  private ArrayList<MSTEdge> MST = new ArrayList<MSTEdge>();
+  
   @Override
   public double getTotalDistance() {
     throw new RuntimeException("not implemented");
@@ -106,8 +131,7 @@ public class MinimalSpanningTreeTour extends Tour {
 	  if(getWorld().getPoints().isEmpty())
 		  return null;
 	  else {
-		  // geef de wortel van de boom terug
-		  
+		  return this.root;
 	  }
   }
   
@@ -117,7 +141,7 @@ public class MinimalSpanningTreeTour extends Tour {
    * The result of this method is never null.
    */
   public List<MSTEdge> getMST() {
-    throw new RuntimeException("not implemented");
+	  return this.MST;
   }
 
   @Override
