@@ -152,6 +152,7 @@ public class MinimalSpanningTreeTour extends Tour {
 				}
 			}
 		}
+		this.tour = (ArrayList<Point>) getVisitSequence();
 
 	}
 
@@ -215,8 +216,7 @@ public class MinimalSpanningTreeTour extends Tour {
 	 * Return the empty list if world is empty.
 	 */
 	public List<Point> getVisitSequence() {		
-		return traverseTree(this.root,this.tour);
-		
+		return traverseTree(this.root,this.tour);	
 	}
 	
 	private ArrayList<Point> traverseTree(Point punt, ArrayList<Point> tour){
