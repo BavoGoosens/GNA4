@@ -100,17 +100,56 @@ public class MinimalSpanningTreeTour extends Tour {
 		}
 
 		// kruskal 
-
+		ArrayList<ArrayList<Point>> union = new ArrayList<>();
 		while(!possibleEdges.isEmpty() && MST.size() < world.getNbPoints() - 1){
 			MSTEdge candidate = possibleEdges.pollFirst();
 			Point p1 = candidate.either();
 			Point p2 = candidate.other();
-			if (!(vertecesInTree.containsKey(p1) && vertecesInTree.containsKey(p2))){
-				if (!vertecesInTree.containsKey(p1))
-					vertecesInTree.put(p1.toString(), p1);
-				if (!vertecesInTree.containsKey(p2))
-					vertecesInTree.put(p2.toString(), p2);
-				MST.add(candidate);
+			// geeft aan in welke disjuncte unie P1 behoort
+			int p1union = -1;
+			// geeft geeft aan in welke disjuncte unie P2 behoort
+			int p2union = -1;
+			// als P1 en P2 in dezelfde set zitten wordt dit true
+			boolean cycle = false;
+			int idx = 0;
+			for ( ArrayList<Point> un : union){
+				if (un.contains(p1))
+					p1union = idx;
+				if (un.contains(p2))
+					p2union = idx;
+				if (p1union == p2union){
+					cycle = true;
+					// mogen stoppen wanneer we zeker zijn dat er een cycle in de graaf gaat ontstaan
+					break;
+				}
+				idx++;
+			}
+			// P1 zit in een set maar P2 niet => voeg P2 toe aan de set waar P1 in zit => voeg edge toe aan mst
+			if (p1union != -1 && p2union == -1){
+				union.get(p1union).add(p2);
+				this.MST.add(candidate);
+			// P2 zit in een set maar P1 niet => voeg P1 toe aan de set waar P2 in zit => voeg edge toe aan mst
+			}else if (p1union == -1 && p2union != -1){
+				union.get(p2union).add(p1);
+				this.MST.add(candidate);
+			// in het geval dat zowel P1 en P2 niet in een set zitten => maak nieuwe set en voeg P1 en P2 toe => voeg edge toe aan mst
+			}else if (p1union == -1 && p2union == -1){
+				ArrayList <Point> newSet = new ArrayList<Point>();
+				newSet.add(p1);
+				newSet.add(p2);
+				union.add(newSet);
+				this.MST.add(candidate);
+			// P1 zit in een set en P2 zit ook in een andere set => merge de sets => voeg edge toe aan mst
+			}else if (p1union != -1 && p2union != -1 && cycle == false){
+				if (p1union < p2union){
+					union.get(p1union).addAll(union.get(p2union));
+					union.remove(p2union);
+					this.MST.add(candidate);
+				}else{
+					union.get(p2union).addAll(union.get(p1union));
+					union.remove(p1union);
+					this.MST.add(candidate);
+				}
 			}
 		}
 
