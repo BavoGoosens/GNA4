@@ -83,29 +83,37 @@ public class MinimalSpanningTreeTour extends Tour {
 		if (world.getNbPoints() < 2){
 			//NOP
 		}else{
+			// we gaan eerst een lijst aanmaken met alle nog niet verbonden punten
 			ArrayList<Point> punten = (ArrayList<Point>) world.getPoints();
+			// deze lijst houdt de punten in de mst bij
 			ArrayList<Point> inTree = new ArrayList<Point>();
+			// de root wordt bijgehouden  en verwijdert uit de onverbonden punten lijst
 			this.root = punten.remove(0);
-			inTree.add(this.root); // beginnen vanaf de root
+			// de root wordt toegevoegd aan de mstpunten
+			inTree.add(this.root);
 
-			while(!punten.isEmpty()){		
+			// start loop voor alle punten die nog niet verbonden zijn
+			// start lazy prim
+			while(!punten.isEmpty()){	
+				// initialisatie hulpvariabelen
 				MSTEdge minimaleMSTEdge = null;
 				double minimaleEdgeAfstand = Double.MAX_VALUE; 
 
-				for(Point start : inTree){		// for each city in tree
-					for(Point einde : punten){		// for each city not yet added to tree
-
-						double currentAfstand = start.distanceTo(einde);		// get the distance from start to end
-
-						if( currentAfstand < minimaleEdgeAfstand ){	// if distance is a new minimum
+				for(Point start : inTree){
+					// voor alle punten in de tree zoeken we de korste edge naar het volgende punt
+					for(Point einde : punten){
+						// deze hulpvariabele houdt huidige afstand bij
+						double currentAfstand = start.distanceTo(einde);		
+						// wanneer de huidige afstand lager is dan het minimum moet dit geupdate worden
+						if( currentAfstand < minimaleEdgeAfstand ){
 							minimaleMSTEdge = new MSTEdge(start, einde);
-							minimaleEdgeAfstand = currentAfstand;		// set new minimum distance
+							minimaleEdgeAfstand = currentAfstand;
 						}
 					}
 				}
-				punten.remove(minimaleMSTEdge.other());					// remove end from city array
+				punten.remove(minimaleMSTEdge.other());					
 				inTree.add(minimaleMSTEdge.other());
-				MST.add(minimaleMSTEdge);		// add edge to tree (grow the tree with lightest edge possible)
+				MST.add(minimaleMSTEdge);
 			}
 
 			/*// compute route here
