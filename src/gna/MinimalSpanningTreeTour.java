@@ -65,7 +65,7 @@ public class MinimalSpanningTreeTour extends Tour {
 
 		@Override
 		public String toString() {
-			return this.p1.toString() + "---" + this.getWeight() + "---" + p2.toString();
+			return this.p1.toString() + " --- " + this.getWeight() + " --- " + p2.toString();
 		}
 
 		public Point either() {
@@ -189,7 +189,6 @@ public class MinimalSpanningTreeTour extends Tour {
 			}
 		}
 			 */
-			this.tour = (ArrayList<Point>) getVisitSequence();
 		}
 	}
 
@@ -204,6 +203,7 @@ public class MinimalSpanningTreeTour extends Tour {
 		if (getWorld().getNbPoints() < 2)
 			return 0;
 		else {
+			getVisitSequence();
 			double total = 0;
 			if(tour.size() > 1){
 				Point begin = tour.get(0);
@@ -253,7 +253,7 @@ public class MinimalSpanningTreeTour extends Tour {
 	 * Return the empty list if world is empty.
 	 */
 	public List<Point> getVisitSequence() {		
-		return traverseTree(this.root, new ArrayList<Point>());	
+		return this.tour = traverseTree(this.root, new ArrayList<Point>());	
 	}
 
 	private ArrayList<Point> traverseTree(Point punt, ArrayList<Point> history){
