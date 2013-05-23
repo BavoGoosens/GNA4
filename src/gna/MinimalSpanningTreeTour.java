@@ -80,7 +80,35 @@ public class MinimalSpanningTreeTour extends Tour {
 
 	public MinimalSpanningTreeTour(World world) {
 		super(world);
-		// compute route here
+		if (world.getNbPoints() < 2){
+			//NOP
+		}else{
+			ArrayList<Point> punten = (ArrayList<Point>) world.getPoints();
+			ArrayList<Point> inTree = new ArrayList<Point>();
+			this.root = punten.remove(0);
+			inTree.add(this.root); // beginnen vanaf de root
+
+			while(!punten.isEmpty()){		
+				MSTEdge minimaleMSTEdge = null;
+				double minimaleEdgeAfstand = Double.MAX_VALUE; 
+
+				for(Point start : inTree){		// for each city in tree
+					for(Point einde : punten){		// for each city not yet added to tree
+
+						double currentAfstand = start.distanceTo(einde);		// get the distance from start to end
+
+						if( currentAfstand < minimaleEdgeAfstand ){	// if distance is a new minimum
+							minimaleMSTEdge = new MSTEdge(start, einde);
+							minimaleEdgeAfstand = currentAfstand;		// set new minimum distance
+						}
+					}
+				}
+				punten.remove(minimaleMSTEdge.other());					// remove end from city array
+				inTree.add(minimaleMSTEdge.other());
+				MST.add(minimaleMSTEdge);		// add edge to tree (grow the tree with lightest edge possible)
+			}
+
+			/*// compute route here
 		HashMap<String, Point> vertecesInTree = new HashMap<>();
 		TreeSet<MSTEdge> possibleEdges = new TreeSet<>(new weightComperator());
 
@@ -152,8 +180,9 @@ public class MinimalSpanningTreeTour extends Tour {
 				}
 			}
 		}
-		this.tour = (ArrayList<Point>) getVisitSequence();
-
+			 */
+			this.tour = (ArrayList<Point>) getVisitSequence();
+		}
 	}
 
 	private Point root;
@@ -216,20 +245,23 @@ public class MinimalSpanningTreeTour extends Tour {
 	 * Return the empty list if world is empty.
 	 */
 	public List<Point> getVisitSequence() {		
-		return traverseTree(this.root,this.tour);	
+		return traverseTree(this.root, new ArrayList<Point>());	
 	}
-	
-	private ArrayList<Point> traverseTree(Point punt, ArrayList<Point> tour){
 
-		tour.add(punt);
+	private ArrayList<Point> traverseTree(Point punt, ArrayList<Point> history){
+
+		history.add(punt);
 
 		for(MSTEdge edge : getMST()){
 			Point parent = edge.either();
 			Point child = edge.other();
-			if( parent.equals(punt) && !tour.contains(child)){		// for each child not already in tour
-				tour = traverseTree(child,tour);
+			if( parent.equals(punt) && !history.contains(child)){
+				history = traverseTree(child,history);
+			}
+			if( child.equals(punt) && !history.contains(parent)){
+				history = traverseTree(parent,history);
 			}
 		}
-		return tour;
+		return history;
 	}
 }
