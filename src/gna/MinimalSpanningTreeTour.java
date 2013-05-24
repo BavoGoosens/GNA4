@@ -3,6 +3,7 @@ package gna;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -86,7 +87,7 @@ public class MinimalSpanningTreeTour extends Tour {
 			// we gaan eerst een lijst aanmaken met alle nog niet verbonden punten
 			ArrayList<Point> punten = (ArrayList<Point>) world.getPoints();
 			// deze lijst houdt de punten in de mst bij
-			ArrayList<Point> inTree = new ArrayList<Point>();
+			LinkedList<Point> inTree = new LinkedList<Point>();
 			// de root wordt bijgehouden  en verwijdert uit de onverbonden punten lijst
 			this.root = punten.remove(0);
 			// de root wordt toegevoegd aan de mstpunten
